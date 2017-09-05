@@ -1,0 +1,83 @@
+﻿Install Docker on your HOST machine . 
+
+By using and applying the steps and procedure stated in the link provided below, we could ensure that we have gotten latest version of docker ( that your system is compatible with) installed and ready. 
+
+
+
+https://docs.docker.com/engine/installation/linux/docker-ee/ubuntu/#extra-packages-for-trusty-1404 
+
+
+
+One of the first and foremost commands to type is to check the version of docker you have. To do so, we invoke the “docker version” command. 
+
+$ docker version 
+
+
+a desired output would be something within the likes of .. 
+
+
+Client version: 1.6.2
+Client API version: 1.18
+Go version (client): go1.5.1
+Git commit (client): 7c8fca2
+OS/Arch (client): linux/amd64
+Server version: 1.6.2
+Server API version: 1.18
+Go version (server): go1.5.1
+Git commit (server): 7c8fca2
+OS/Arch (server): linux/amd64
+
+
+if you see something as it appears above, then you have configured docker correctly .. 
+
+However, should you get any prompt other that what appears above, that might indicate you've gotten an error instead, then you might consider observing or executing this troubleshooting tips. 
+
+First ask yourself a few questions and take this steps to troubleshoot according to the scenario.
+
+
+First question. Is the docker service running ? 
+
+Try this steps,  
+
+$ sudo service docker status 
+
+if not running,
+
+$ sudo service docker start 
+
+or 
+
+$ sudo service docker restart 
+
+
+Another question to ask .. have you included your username into the docker group 
+
+
+$ sudo usermod -a -G docker <uname> 
+
+
+Docker would still be able to run, in the absence of the user being part of the group.  You would only have to be a sudo doer  to accomplish each command
+
+
+sometimes you would have to reinforce the docker group by  using the newgrp command
+
+$ newgrp docker
+
+
+
+
+
+Now , a few docker commands . 
+
+ To list or show the available docker images within the host repository 
+
+$ docker images 
+
+To view the current running docker containers 
+
+$ docker ps
+
+
+
+
+
