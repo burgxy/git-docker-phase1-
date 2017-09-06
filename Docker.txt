@@ -78,6 +78,134 @@ To view the current running docker containers
 $ docker ps
 
 
+For this project I would be using and ubuntu container 
+
+$ docket pull ubuntu 
+
+first run of the container 
+
+$ docker run -ti –name “webserver” ubuntu /bin/bash 
+
+
+with the command executed above, we should have a basic ubuntu container running and logged in as root . 
+
+Update the ubuntu container 
+
+# apt-get update 
+
+Install mc and vim-nox 
+
+# apt-get install mc vim-nox -y
+then install apache2 
+
+# apt-get install apache2 
+
+
+now use the mc command to view available directories in a GUI
+
+# mc
+
+hit F10 to exit 
+
+then exit the container  named webserver
+
+# exit
+
+now view all available containers noticed the one named “webserver” and take note of its cointainer ID
+
+$ docker ps -a 
+
+Now commit the docker image with a message indicating that mc, vi, and apache2 has been installed, make sure you invoke the correct container ID as well 
+
+
+# docker commit -m "added mc, vi, and apache2" 3d69d9147774 ubuntu_webserver_base
+
+Now a new image would have been created .. called ubuntu_webserver_base 
+
+
+now we are going to map port 80 of the container to port 80 of the host.  So as if anyone goes to a web browser and requests for localhost. They would hit the Apache container. 
+
+$ docker run -ti -p 80:80 --name apache_web ubuntu_webserver_base /bin/bash 
+
+ti
+then check out if the apache2 service is running ( I doubt it would) 
+
+$ service apache2 status 
+
+start the apache2 service 
+
+$ service apache2 start
+
+go to the web browser on the host and type localhost. 
+
+
+You should see that a web server is up and running.  
+
+Now to build a Dockerfile based on the ubuntu_webserver_base image we have created. 
+
+To do so, we run 
+
+$ touch Dockerfile 
+
+then either vim or nano, which ever you're comfortable with  ..  you put in these values 
+
+
+FROM ubuntu_webserver_base
+
+COPY ./start.sh /
+
+EXPOSE 80
+
+ENTRYPOINT ["/start.sh"] 
+
+
+save and exit
+
+
+From the Dockerfile, we can derive that a script called start.sh would be copied into the container and executed at some point. Therefore, we have to write the start start.sh script.
+
+
+At the time we ran our first webserver container, if you'd remember the webserver did not run at start up.  Although we could rectify that in the docker file by including a RUN tag as well as the command we intend to run, we would rather be using a script to, do our rectifications. 
+
+
+Once again, I would run 
+
+$ touch start.sh  
+
+and using vim or nano
+
+$ nano start.sh
+
+we would then input in the following lines of script. 
+
+#! /bin/bash
+
+apachectl start
+
+while ["$END"=='' ]; do 
+	sleep 10
+	trap "/etc/init.d/apache2 stop && END=1" INT TERM 
+done
+
+
+save and exit . 
+
+Now its time to build from the “our newly created Dockerfile” 
+
+I would accomplish that by using the docker build command. 
+
+$ docker build -t web-server . 
+
+Never forget the “.”  dot at the end .. the dot signifies the location of the Dockerfile we intend to build from. 
+
+
+The command above builds a new docker image named web-server. And now we can run it. 
+
+$ docker run -d -P web-server 
+
+
+
+
 
 
 
