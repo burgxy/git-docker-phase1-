@@ -1,4 +1,4 @@
-FROM ubuntu:12.04
+FROM ubuntu
 
 # Install dependencies
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y git curl apache2 php5 libapache2-mod-php5 php5-mcrypt php5-mysql
